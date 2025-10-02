@@ -1,0 +1,588 @@
+
+<!doctype html>
+<html lang="ja" class="size-m">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>田橋 矢男無 の 占い</title>
+<style>
+  :root{
+    --bg:#0f2632; --panel:#163142; --panel2:#1c3a4f;
+    --text:#e9f3f9; --muted:#bcd0dc; --accent:#ffbc40; --accent-d:#eea21a;
+    --good:#6be59a; --warn:#ffc266;
+    --pastel1:#e8f7ff; --pastel2:#e9fff5; --pastel3:#fff6e1; --pastel4:#f6e9ff;
+    --line:#2f5f75;
+  }
+  html.size-s { font-size: 14px; }
+  html.size-m { font-size: 16px; }
+  html.size-l { font-size: 18px; }
+
+  *{ box-sizing:border-box; }
+  html, body{ margin:0; padding:0; background:var(--bg); color:var(--text); }
+  body{
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    line-height:1.75;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{ max-width:980px; margin:40px auto; padding:0 18px; }
+  .card{ background:linear-gradient(180deg, var(--panel), var(--panel2));
+         border:1px solid rgba(255,255,255,0.06); border-radius:16px; box-shadow:0 10px 26px rgba(0,0,0,.35); }
+  .box{ padding:24px; }
+  .title{ text-align:center; letter-spacing:.2em; font-weight:700; padding-top:8px; }
+  h1{ margin:0; font-size:1.6rem; font-weight:900; letter-spacing:.35em; }
+  .subline{ text-align:center; font-size:.85rem; color:var(--muted); margin-top:6px; }
+
+  .toolbar{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin:8px 0 0; flex-wrap:wrap }
+  .seg{ background:#0f2a39; border:1px solid rgba(255,255,255,.12); border-radius:10px; overflow:hidden; }
+  .seg button{ background:transparent; color:var(--text); border:none; padding:.45rem .8rem; cursor:pointer; font-weight:700; }
+  .seg button.active{ background:#163a51; }
+
+  .grid{ display:grid; gap:12px; grid-template-columns: repeat(4, 1fr); }
+  .grid .col-2{ grid-column: span 2; }
+  .grid .col-3{ grid-column: span 3; }
+  .grid .col-4{ grid-column: span 4; }
+
+  label{ font-size:.85rem; color:var(--muted); display:block; margin:4px 2px 6px; }
+  select, input[type="text"]{
+    width:100%; background:#102836; border:1px solid rgba(255,255,255,.1); color:var(--text);
+    padding:.65rem .75rem; border-radius:10px; outline:none; font-size:1rem;
+  }
+  .hint{ font-size:.8rem; color:var(--muted); margin-top:4px; }
+
+  .btn{
+    display:block; width:100%; padding:.9rem 1.1rem; border-radius:12px;
+    background:linear-gradient(180deg, var(--accent), var(--accent-d));
+    color:#2d2200; font-weight:800; border:none; cursor:pointer; letter-spacing:.15em;
+    box-shadow: 0 8px 18px rgba(255,188,64,.25); font-size:1.05rem;
+  }
+  .btn:disabled{ opacity:.5; cursor:not-allowed; }
+  .note{ text-align:center; font-size:.8rem; color:var(--muted); margin:8px 0 0; }
+
+  .result{ margin-top:18px; }
+  .res-title{ font-weight:900; font-size:1.2rem; margin:0 0 8px; }
+  .lead{ color:var(--good); font-size:1rem; margin-bottom:10px; }
+  .sec{ line-height:1.9; font-size:1rem; }
+  .kvs{ display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; }
+  .tag{ font-size:.85rem; color:#08222f; background:#9fd8ff; border-radius:999px; padding:.35rem .6rem; font-weight:700; }
+  .pill{ font-size:.85rem; color:#0b2230; background:#b2f0cc; border-radius:999px; padding:.35rem .6rem; font-weight:800; }
+  .bullet{ margin-top:12px; padding:12px; background:#0f2a39; border:1px dashed rgba(255,255,255,.08); border-radius:10px; }
+  .alert{ background:#2a0f14; border:1px dashed rgba(255,180,170,.35); }
+  ruby{ ruby-position: over; }
+  rt{ font-size:.65em; color:var(--muted); }
+
+  .footer{ text-align:center; color:var(--muted); font-size:.75rem; padding:18px 0 24px; }
+
+  /* プロフィール管理UI */
+  .profbar{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .profbar input[type="text"]{ width:auto; min-width:140px; }
+  .btn-min{ padding:.45rem .7rem; font-size:.9rem; border-radius:10px; border:none; cursor:pointer; font-weight:800; background:#24506a; color:#dff4ff }
+  .btn-del{ background:#6a2433; color:#ffe3ea }
+  .label-inline{ display:flex; align-items:center; gap:6px; color:var(--muted); font-size:.85rem }
+  .t-muted{ color:var(--muted); font-size:.8rem }
+
+  /* カレンダー（可視性＆モバイル最適化） */
+  .cal-card{background:linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border:1px dashed rgba(255,255,255,.22); margin-top:16px}
+  .cal-title{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-weight:900}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 8px}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800;border:1px solid rgba(255,255,255,.25)}
+  .weekbar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:8px 0}
+  .weekbar span{font-size:12px;text-align:center;opacity:.95}
+  .grid14{display:grid;grid-template-columns:repeat(7, minmax(0,1fr));gap:8px}
+  .cell{position:relative;background:#1b4256;border:1px solid var(--line);border-radius:14px;
+    min-height:96px;padding:10px 10px 12px;box-shadow:0 6px 14px rgba(0,0,0,.15)}
+  .flag{position:absolute;right:-4px;top:-6px;background:#fff;color:#134;font-weight:900;font-size:12px;
+    padding:3px 8px;border-radius:10px 10px 10px 0;box-shadow:0 4px 10px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.4)}
+  .date{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:6px;color:var(--muted)}
+  .emoji{font-size:20px}
+  .score{display:inline-flex;gap:6px;align-items:center;padding:5px 8px;border-radius:999px;font-weight:800;border:1px solid rgba(255,255,255,.18)}
+  .s-good{background:rgba(18,211,182,.18);color:var(--good)}
+  .s-mid {background:rgba(255,210,102,.18);color:#ffd266}
+  .s-low {background:rgba(255,111,111,.18);color:#ff9a9a}
+  .icon{font-size:18px;margin-left:6px}
+
+  /* --- モバイル最適化 --- */
+  @media (max-width: 640px){
+    .wrap{ margin:20px auto; padding:0 12px; }
+    .box{ padding:16px; }
+    h1{ font-size:1.35rem; letter-spacing:.25em; }
+    .grid{ grid-template-columns: repeat(2, 1fr); }
+    .grid .col-2, .grid .col-3, .grid .col-4{ grid-column: span 2; }
+    .weekbar{ gap:4px; }
+    .grid14{ gap:4px; }
+    .cell{ min-height:78px; padding:8px; border-radius:12px; }
+    .date{ font-size:12px; }
+    .emoji{ font-size:18px; }
+    .score{ padding:4px 6px; font-size:.9rem; }
+    .legend .badge{ font-size:11px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="box">
+        <!-- ヘッダー -->
+        <div class="toolbar">
+          <!-- 文字サイズ -->
+          <div class="seg" role="group" aria-label="文字サイズ">
+            <button id="fs-s">小</button>
+            <button id="fs-m" class="active">中</button>
+            <button id="fs-l">大</button>
+          </div>
+
+          <!-- トーン切替：表 / 裏 -->
+          <div class="tone" aria-label="トーン切替" style="display:flex;gap:8px;align-items:center">
+            <span class="t-muted">🎭 モード：</span>
+            <div class="seg">
+              <button id="tone-omote" class="active" title="やさしめ・穏やか">表モード</button>
+              <button id="tone-ura" title="ズバッと大阪のおばちゃん">裏モード</button>
+            </div>
+          </div>
+
+          <!-- プロフィール管理（端末保存） -->
+          <div class="profbar" aria-label="プロフィール管理（端末保存）">
+            <span class="t-muted">👤 プロフィール：</span>
+            <select id="profSelect" title="保存済みプロフィール"></select>
+            <input id="profName" type="text" placeholder="新規名（例：たろう）"/>
+            <button id="profSave" class="btn-min">保存/更新</button>
+            <button id="profDelete" class="btn-min btn-del">削除</button>
+            <label class="label-inline"><input type="checkbox" id="autoLoad"/> 次回自動で読み込む</label>
+          </div>
+        </div>
+
+        <div class="title">
+          <h1>
+            <ruby>田<rt>た</rt></ruby><ruby>橋<rt>ばし</rt></ruby>
+            <span style="margin:0 .2em;"></span>
+            <ruby>矢<rt>や</rt></ruby><ruby>男<rt>お</rt></ruby><ruby>無<rt>な</rt></ruby>
+            <span style="margin:0 .2em;"></span>の<span style="margin:0 .2em;"></span>
+            <ruby>占<rt>うら</rt></ruby>い
+          </h1>
+          <div class="subline">（たばし やおな）</div>
+        </div>
+
+        <!-- 入力UI -->
+        <div class="grid" style="margin-top:18px">
+          <div>
+            <label>生まれ年</label>
+            <select id="year"></select>
+          </div>
+          <div>
+            <label>月</label>
+            <select id="month"></select>
+          </div>
+          <div>
+            <label>日</label>
+            <select id="day"></select>
+          </div>
+          <div>
+            <label>性別</label>
+            <select id="gender" style="color:#dfefff; font-weight:700;">
+              <option value="男性">男性</option>
+              <option value="女性">女性</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+
+          <div class="col-2">
+            <label>テーマ</label>
+            <select id="theme">
+              <option value="総運">総運</option>
+              <option value="金運">金運</option>
+              <option value="仕事運">仕事運</option>
+              <option value="恋愛運">恋愛運</option>
+              <option value="人間関係">人間関係</option>
+              <option value="健康運">健康運</option>
+            </select>
+          </div>
+
+          <div class="col-2">
+            <label>占術（複数可 / 未選択ならミックス）</label>
+            <div id="methods" style="display:flex; gap:10px; flex-wrap:wrap;">
+              <label><input type="checkbox" value="四柱推命"> 四柱推命</label>
+              <label><input type="checkbox" value="タロット"> タロット</label>
+              <label><input type="checkbox" value="数秘術"> 数秘術</label>
+              <label><input type="checkbox" value="動物占い"> 動物占い</label>
+              <label><input type="checkbox" value="九星気学"> 九星気学</label>
+              <label><input type="checkbox" value="西洋占星術"> 西洋占星術</label>
+              <label><input type="checkbox" value="ミックス"> ミックス</label>
+            </div>
+            <div class="hint">※ 何も選ばなければ自動で「ミックス」扱いになります。</div>
+          </div>
+
+          <div class="col-2">
+            <label>（任意）ベースになる出来事や気になること</label>
+            <input id="base" type="text" placeholder="例）転職を検討／出費が続く／出会いが増えた など" />
+          </div>
+          <div class="col-2">
+            <label>（任意）願い・条件</label>
+            <input id="wish" type="text" placeholder="例）昇給したい／安定収入が欲しい／素敵な出会い など" />
+          </div>
+
+          <div class="col-4">
+            <button id="run" class="btn">占う！（結果を表示）</button>
+            <div class="note">※ クリックから数秒〜数十秒で表示されます</div>
+          </div>
+        </div>
+
+        <!-- 結果 -->
+        <div id="res" class="result"></div>
+
+        <!-- 2週間カレンダー -->
+        <div id="bio" class="card cal-card" style="display:none">
+          <h3 class="cal-title">✨ 2週間のラッキーバイオリズム ✨</h3>
+          <div class="legend">
+            <span class="badge">⭐ 全体運が良い日</span>
+            <span class="badge">❤️ 恋愛運が良い日</span>
+            <span class="badge">💰 金運が良い日</span>
+            <span class="badge">💼 仕事運が良い日</span>
+            <span class="badge">☘️ 休みの日（ゆっくり）</span>
+          </div>
+          <div class="weekbar"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
+          <div id="days" class="grid14"></div>
+          <div class="note">※ ⭐の日は総合的におすすめ。予定や挑戦はここに寄せると吉。</div>
+        </div>
+
+      </div>
+    </div>
+    <div class="footer">© Tanbashi-ya Onaa</div>
+  </div>
+
+<script>
+  const $ = (s,p=document)=>p.querySelector(s);
+  const esc = (s)=>String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+
+  /* ===== 文字サイズ ===== */
+  const mapSize = { s:"size-s", m:"size-m", l:"size-l" };
+  function applySize(k){
+    document.documentElement.classList.remove("size-s","size-m","size-l");
+    document.documentElement.classList.add(mapSize[k]||"size-m");
+    $("#fs-s").classList.toggle("active", k==="s");
+    $("#fs-m").classList.toggle("active", k==="m");
+    $("#fs-l").classList.toggle("active", k==="l");
+    localStorage.setItem("fontSizeKey", k);
+  }
+  $("#fs-s").onclick = ()=>applySize("s");
+  $("#fs-m").onclick = ()=>applySize("m");
+  $("#fs-l").onclick = ()=>applySize("l");
+  applySize(localStorage.getItem("fontSizeKey") || "m");
+
+  /* ===== トーン切替：表/裏 ===== */
+  let tone = localStorage.getItem("fortuneTone") || "normal"; // normal / ura
+  function applyToneUI(){
+    $("#tone-omote").classList.toggle("active", tone==="normal");
+    $("#tone-ura").classList.toggle("active", tone==="ura");
+  }
+  $("#tone-omote").onclick = ()=>{ tone="normal"; localStorage.setItem("fortuneTone", tone); applyToneUI(); };
+  $("#tone-ura").onclick    = ()=>{ tone="ura";    localStorage.setItem("fortuneTone", tone); applyToneUI(); };
+  applyToneUI();
+
+  /* ===== 生年月日プルダウン（閏年対応） ===== */
+  const elYear=$("#year"), elMonth=$("#month"), elDay=$("#day");
+  (function initBirth(){
+    const now = new Date();
+    const yNow = now.getFullYear();
+    for(let y=yNow; y>=1900; y--) elYear.append(new Option(String(y), String(y)));
+    for(let m=1; m<=12; m++) elMonth.append(new Option(String(m), String(m)));
+    function fillDays(){
+      const y=Number(elYear.value), m=Number(elMonth.value);
+      const last = new Date(y, m, 0).getDate();
+      const keep = elDay.value;
+      elDay.innerHTML="";
+      for(let d=1; d<=last; d++) elDay.append(new Option(String(d), String(d)));
+      if (keep && Number(keep)<=last) elDay.value = keep;
+    }
+    elYear.addEventListener("change", fillDays);
+    elMonth.addEventListener("change", fillDays);
+    elYear.value = String(yNow);
+    elMonth.value = String(now.getMonth()+1);
+    fillDays();
+    elDay.value = String(now.getDate());
+  })();
+
+  /* ===== プロフィール保存（localStorage） ===== */
+  const LS_KEY = "fortuneProfiles:v1";
+  const LS_AUTO = "fortuneAutoLoadName";
+
+  const elProfSelect = $("#profSelect");
+  const elProfName   = $("#profName");
+  const elProfSave   = $("#profSave");
+  const elProfDelete = $("#profDelete");
+  const elAutoLoad   = $("#autoLoad");
+
+  function loadProfiles(){
+    try{ return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); }
+    catch{ return {}; }
+  }
+  function saveProfiles(obj){
+    localStorage.setItem(LS_KEY, JSON.stringify(obj));
+  }
+  function refreshProfSelect(selectedName){
+    const profs = loadProfiles();
+    elProfSelect.innerHTML = "";
+    elProfSelect.append(new Option("（選択してください）", ""));
+    Object.keys(profs).sort().forEach(name=>{
+      const o = new Option(name, name);
+      if (selectedName && name===selectedName) o.selected = true;
+      elProfSelect.append(o);
+    });
+  }
+  function getCurrentInput(){
+    return {
+      name: elProfName.value.trim(),
+      year: $("#year").value,
+      month: $("#month").value,
+      day: $("#day").value,
+      gender: $("#gender").value,
+      theme: $("#theme").value,
+      methods: Array.from(document.querySelectorAll("#methods input:checked")).map(i=>i.value)
+    };
+  }
+  function setInputs(p){
+    if (!p) return;
+    if (p.year)  $("#year").value  = String(p.year);
+    if (p.month) { $("#month").value = String(p.month); $("#month").dispatchEvent(new Event("change")); }
+    if (p.day)   $("#day").value   = String(p.day);
+    if (p.gender) $("#gender").value = p.gender;
+    if (p.theme)  $("#theme").value  = p.theme;
+    document.querySelectorAll("#methods input[type=checkbox]").forEach(chk=>{
+      chk.checked = Array.isArray(p.methods) ? p.methods.includes(chk.value) : false;
+    });
+  }
+
+  elProfSave.addEventListener("click", ()=>{
+    const p = getCurrentInput();
+    if (!p.name){ alert("プロフィール名を入力してください（例：たろう）"); elProfName.focus(); return; }
+    const profs = loadProfiles();
+    profs[p.name] = p;
+    saveProfiles(profs);
+    refreshProfSelect(p.name);
+    if (elAutoLoad.checked) localStorage.setItem(LS_AUTO, p.name);
+    alert("保存しました（この端末のこのブラウザだけに保存されます）。");
+  });
+
+  elProfDelete.addEventListener("click", ()=>{
+    const name = elProfSelect.value || elProfName.value.trim();
+    if (!name){ alert("削除するプロフィールを選択または入力してください。"); return; }
+    const profs = loadProfiles();
+    if (!profs[name]){ alert("その名前のプロフィールは存在しません。"); return; }
+    if (!confirm(`「${name}」を削除しますか？`)) return;
+    delete profs[name];
+    saveProfiles(profs);
+    refreshProfSelect("");
+    if (localStorage.getItem(LS_AUTO)===name) localStorage.removeItem(LS_AUTO);
+    alert("削除しました。");
+  });
+
+  elProfSelect.addEventListener("change", ()=>{
+    const name = elProfSelect.value;
+    if (!name) return;
+    const profs = loadProfiles();
+    const p = profs[name];
+    if (p){ setInputs(p); elProfName.value = name; }
+  });
+
+  elAutoLoad.addEventListener("change", ()=>{
+    const name = elProfSelect.value || elProfName.value.trim();
+    if (elAutoLoad.checked){
+      if (!name){ alert("自動読込にするには、プロフィール名を選択または入力してください。"); elAutoLoad.checked=false; return; }
+      localStorage.setItem(LS_AUTO, name);
+      alert(`次回から「${name}」を自動で読み込みます。`);
+    }else{
+      localStorage.removeItem(LS_AUTO);
+    }
+  });
+
+  (function initProfiles(){
+    refreshProfSelect("");
+    const autoName = localStorage.getItem(LS_AUTO);
+    if (autoName){
+      const profs = loadProfiles();
+      if (profs[autoName]){ setInputs(profs[autoName]); elProfName.value = autoName; refreshProfSelect(autoName); elAutoLoad.checked = true; }
+    }
+  })();
+
+  /* ===== 結果整形 ===== */
+  function beautify(text){
+    const raw = String(text || "").trim();
+    if (!raw) return "";
+    const sentences = raw.replace(/\s+/g," ").split(/(?<=。)/);
+    const chunks = [];
+    let buf = "";
+    for (let i=0;i<sentences.length;i++){
+      buf += sentences[i];
+      const needBreak = ((i+1)%2===0) || sentences[i].length>40;
+      if (needBreak){ chunks.push(buf.trim()); buf=""; }
+    }
+    if (buf.trim()) chunks.push(buf.trim());
+    return chunks.map(p=>`<p class="sec">${esc(p)}</p>`).join("");
+  }
+
+  /* ===== バイオリズム用ユーティリティ（5アイコン判定付き） ===== */
+  const daysWrap=$("#days"), bioCard=$("#bio");
+  function seedRand(seed){ let x = seed|0; return ()=>{ x^=x<<13; x^=x>>>17; x^=x<<5; return (x>>>0)/4294967295; }; }
+  function toYMD(d){const z=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;}
+  function addDays(d, n){const x=new Date(d); x.setDate(x.getDate()+n); return x;}
+  function dayOfWeek(ymd){ return new Date(`${ymd}T00:00:00`).getDay(); }
+
+  // 各カテゴリスコア生成：誕生日＋オフセットで再現性を担保
+  function scoreFactory(birth, offset){
+    const base = birth ? new Date(birth) : new Date();
+    const seed = (base.getFullYear()*101 + (base.getMonth()+1)*31 + base.getDate()) ^ offset;
+    const rnd = seedRand(seed);
+    return (i)=>{ // i 日目
+      const core = 55 + Math.floor(rnd()*45); // 55〜99
+      const wave = Math.round(12*Math.sin(((i+offset/7)/3)*Math.PI));
+      return Math.max(35, Math.min(100, core + wave));
+    };
+  }
+
+  // アイコン決定：⭐(overall>=85) ＞ 週末☘️ ＞ 最大カテゴリ（❤️/💰/💼）
+  function pickIcon(ymd, sAll, sLove, sMoney, sWork){
+    const wd = dayOfWeek(ymd);
+    if (sAll >= 85) return { icon:"⭐", label:"全体運が良い日" };
+    if (wd === 0 || wd === 6) return { icon:"☘️", label:"休みの日（ゆっくり）" };
+    // 最大カテゴリ
+    const entries = [
+      {k:"love", v:sLove, icon:"❤️", label:"恋愛運が良い日"},
+      {k:"money", v:sMoney, icon:"💰", label:"金運が良い日"},
+      {k:"work", v:sWork, icon:"💼", label:"仕事運が良い日"}
+    ];
+    entries.sort((a,b)=>b.v-a.v);
+    return { icon: entries[0].icon, label: entries[0].label };
+  }
+
+  /* ===== 占う！ ===== */
+  const elRun=$("#run"), elRes=$("#res");
+  const elTheme=$("#theme"), elGender=$("#gender"), elBase=$("#base"), elWish=$("#wish");
+
+  function getMethods(){
+    return Array.from(document.querySelectorAll("#methods input:checked")).map(i=>i.value);
+  }
+
+  elRun.addEventListener("click", async () => {
+    try{
+      elRun.disabled = true;
+      elRun.textContent = "占い中…";
+      elRes.innerHTML = "";
+      bioCard.style.display="none"; daysWrap.innerHTML="";
+
+      const birth = `${year.value}-${String(month.value).padStart(2,"0")}-${String(day.value).padStart(2,"0")}`;
+      const body = {
+        birth,
+        gender: elGender.value,
+        theme: elTheme.value,
+        baseResult: elBase.value,
+        wish: elWish.value,
+        methods: getMethods(),
+        tone // normal / ura
+      };
+
+      const r = await fetch("/fortune", {
+        method: "POST",
+        headers: {"Content-Type":"application/json", "Cache-Control":"no-cache"},
+        body: JSON.stringify(body)
+      });
+      const js = await r.json();
+      if (!js.ok) throw new Error(js.error || "占いに失敗しました。");
+
+      const d = js.data || {};
+      const title = esc(d.title || "");
+      const lead  = esc(d.lead  || "");
+      const over  = beautify(d.overview);
+      const advice = (Array.isArray(d.advice)?d.advice:[]).map(x=>`<li>${esc(x)}</li>`).join("");
+      const warns  = (Array.isArray(d.warnings)?d.warnings:[]).map(x=>`<li>${esc(x)}</li>`).join("");
+      const kw     = (Array.isArray(d.keywords)?d.keywords:[]).slice(0,6).map(k=>`<span class="tag">${esc(k)}</span>`).join("");
+
+      const color = esc(d.lucky_color || "-");
+      const num   = esc(d.lucky_number || "-");
+      const days  = Array.isArray(d.chance_days) ? d.chance_days : [];
+      const chance = days.map(s=>`<span class="pill">チャンスの日：${esc(s)}</span>`).join(" ");
+
+      elRes.innerHTML = `
+        <div class="card" style="margin-top:16px">
+          <div class="box">
+            <div class="res-title">${title}</div>
+            <div class="lead">${lead}</div>
+            <div>${over}</div>
+
+            ${warns ? `
+            <div class="bullet alert">
+              <b>注意しておきたいこと</b>
+              <ul class="list">${warns}</ul>
+            </div>` : ""}
+
+            ${advice ? `
+            <div class="bullet" style="margin-top:12px">
+              <b>${d.tone==="ura" ? "裏モードのアドバイス（ズバッといくで）" : "アドバイス"}</b>
+              <ul class="list">${advice}</ul>
+            </div>` : ""}
+
+            <div class="kvs" style="margin-top:12px">
+              <span class="pill">ラッキーカラー：${color}</span>
+              <span class="pill">ラッキーナンバー：${num}</span>
+              ${chance}
+            </div>
+
+            ${kw ? `<div class="kvs" style="margin-top:8px">${kw}</div>` : ""}
+          </div>
+        </div>
+      `;
+
+      // ===== 2週間カレンダー（5アイコン判定付き） =====
+      const today = new Date(); today.setHours(0,0,0,0);
+
+      // 各カテゴリスコア関数
+      const fAll   = scoreFactory(birth, 111);
+      const fLove  = scoreFactory(birth, 237);
+      const fMoney = scoreFactory(birth, 353);
+      const fWork  = scoreFactory(birth, 479);
+
+      // 14日分作成
+      const bio = Array.from({length:14},(_,i)=>{
+        const date = toYMD(addDays(today,i));
+        const sAll   = fAll(i);
+        const sLove  = fLove(i);
+        const sMoney = fMoney(i);
+        const sWork  = fWork(i);
+        const {icon, label} = pickIcon(date, sAll, sLove, sMoney, sWork);
+        return { date, sAll, sLove, sMoney, sWork, icon, label };
+      });
+
+      const weekday = s => new Date(`${s}T00:00:00`).getDay();
+      const pad = weekday(bio[0].date);
+      const classByAll = s => s>=80?"s-good": s>=60?"s-mid":"s-low";
+      const pretty = s=>{ const d=new Date(`${s}T00:00:00`); return `${d.getMonth()+1}/${String(d.getDate()).padStart(2,"0")}`; };
+
+      daysWrap.innerHTML = (pad?`<div style="grid-column:span ${pad}"></div>`:"") + bio.map((x,i)=>{
+        const pastel = [ "var(--pastel1)", "var(--pastel2)", "var(--pastel3)", "var(--pastel4)" ][ i % 4 ];
+        return `
+        <div class="cell" style="background:linear-gradient(180deg, ${pastel}1f, rgba(0,0,0,.12));" title="${esc(x.label)}">
+          <div class="date">
+            <span>${pretty(x.date)}</span>
+            <span class="emoji" aria-label="${esc(x.label)}">${x.icon}</span>
+          </div>
+          <div class="score ${classByAll(x.sAll)}">全体：${Math.round(x.sAll)}</div>
+        </div>`;
+      }).join("");
+      const lastPad = (7 - ((pad + bio.length) % 7)) % 7;
+      if(lastPad) daysWrap.insertAdjacentHTML("beforeend", `<div style="grid-column:span ${lastPad}"></div>`);
+      bioCard.style.display = "";
+    }catch(e){
+      elRes.innerHTML = `
+        <div class="card" style="margin-top:16px">
+          <div class="box">
+            <div class="lead" style="color:var(--warn)">通信に失敗しました。</div>
+            <pre class="sec" style="white-space:pre-wrap">${esc(e.message || e)}</pre>
+          </div>
+        </div>
+      `;
+    }finally{
+      elRun.disabled = false;
+      elRun.textContent = "占う！（結果を表示）";
+    }
+  });
+</script>
+</body>
+</html>
